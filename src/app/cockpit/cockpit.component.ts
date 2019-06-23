@@ -1,4 +1,11 @@
-import { Component, OnInit, EventEmitter, Output } from "@angular/core";
+import {
+  Component,
+  OnInit,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ElementRef
+} from "@angular/core";
 
 @Component({
   selector: "app-cockpit",
@@ -17,23 +24,34 @@ export class CockpitComponent implements OnInit {
     serverContent: string;
   }>();
 
-  newServerName = "";
-  newServerContent = "";
+  /* These were the values used before we used template refs and
+    @ViewChild to grab values from the template
+  */
+  // newServerName = "";
+  // newServerContent = "";
+
+  // @ViewChild is a property decorator that lets the TS file access elemets from the template.
+  // must pass in w/ it {static: true} for Angular 8 or set it to flase if used inside ngOnInit.
+
+  // The following is one line, but split into two.
+  @ViewChild("ServerContentInput", { static: true })
+  serverContentInput: ElementRef;
+  //
 
   constructor() {}
 
   ngOnInit() {}
-  onAddServer(ServerNameInput) {
+  onAddServer(ServerNameInput: HTMLInputElement) {
     this.serverCreated.emit({
       serverName: ServerNameInput.value,
-      serverContent: this.newServerContent
+      serverContent: this.serverContentInput.nativeElement.value
     });
   }
 
-  onAddBlueprint() {
+  onAddBlueprint(ServerNameInput: HTMLInputElement) {
     this.blueprintCreated.emit({
-      serverName: this.newServerName,
-      serverContent: this.newServerContent
+      serverName: ServerNameInput.value,
+      serverContent: this.serverContentInput.nativeElement.value
     });
   }
 }
